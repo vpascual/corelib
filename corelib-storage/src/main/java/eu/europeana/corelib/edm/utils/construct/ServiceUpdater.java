@@ -27,7 +27,17 @@ public class ServiceUpdater implements Updater<ServiceImpl> {
                 ops.unset("dctermsConformsTo");
             } else {
                 newEntity.setDcTermsConformsTo(mongoEntity.getDctermsConformsTo());
-                ops.set("odrlInheritedFrom", mongoEntity.getDctermsConformsTo());
+                ops.set("dctermsConformsTo", mongoEntity.getDctermsConformsTo());
+            }
+            update=true;
+        }
+        if(!StringUtils.equals(mongoEntity.getDoapImplements(),newEntity.getDoapImplements())){
+            if(mongoEntity.getDoapImplements()==null){
+                newEntity.setDoapImplements(null);
+                ops.unset("doapImplements");
+            } else {
+                newEntity.setDoapImplements(mongoEntity.getDoapImplements());
+                ops.set("doapImplements", mongoEntity.getDoapImplements());
             }
             update=true;
         }

@@ -10,6 +10,7 @@ import eu.europeana.corelib.definitions.edm.entity.Service;
 public class ServiceImpl extends AbstractEdmEntityImpl implements Service {
 
     private String dctermsConformsTo;
+    private String doapImplements;
 
     @Override
     public String getDctermsConformsTo() {
@@ -19,5 +20,15 @@ public class ServiceImpl extends AbstractEdmEntityImpl implements Service {
     @Override
     public void setDcTermsConformsTo(String dcTermsConformsTo) {
         this.dctermsConformsTo = dcTermsConformsTo;
+    }
+
+    @Override
+    public String getDoapImplements() {
+        return doapImplements;
+    }
+
+    @Override
+    public void setDoapImplements(String doapImplements) {
+        this.doapImplements = doapImplements;
     }
 }

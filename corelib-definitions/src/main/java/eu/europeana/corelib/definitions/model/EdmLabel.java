@@ -91,6 +91,7 @@ public enum EdmLabel {
 	//SERVICE
 	SV_RDF_ABOUT("svcs_service",SolrType.INDEXED),
 	SV_DCTERMS_CONFORMS_TO("sv_dcterms_conformsTo",SolrType.INDEXED),
+	SV_DOAP_IMPLEMENTS("sv_doap_implements",SolrType.INDEXED),
 
 	// PROVIDER PROXY
 	ORE_PROXY("proxy_ore_proxy", SolrType.INDEXED), 

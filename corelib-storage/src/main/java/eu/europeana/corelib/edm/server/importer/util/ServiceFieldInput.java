@@ -17,6 +17,9 @@ public class ServiceFieldInput {
         if (service.getConformsTo().getResource() != null && StringUtils.isNotEmpty(service.getConformsTo().getResource().getResource())) {
             serv.setDcTermsConformsTo(service.getConformsTo().getResource().getResource());
         }
+        if (service.getImplements().getResource() != null && StringUtils.isNotEmpty(service.getImplements().getResource())) {
+            serv.setDoapImplements(service.getImplements().getResource());
+        }
         return serv;
     }
 
@@ -25,6 +28,10 @@ public class ServiceFieldInput {
         if (service.getConformsTo() != null && service.getConformsTo().getResource() != null
                 && StringUtils.isNotEmpty(service.getConformsTo().getResource().getResource())) {
             solrInputDocument.addField(EdmLabel.SV_DCTERMS_CONFORMS_TO.toString(), service.getConformsTo().getResource().getResource());
+        }
+        if (service.getImplements() != null
+                && StringUtils.isNotEmpty(service.getImplements().getResource())) {
+            solrInputDocument.addField(EdmLabel.SV_DOAP_IMPLEMENTS.toString(), service.getImplements().getResource());
         }
         return solrInputDocument;
     }
