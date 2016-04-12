@@ -6,14 +6,13 @@
 
 package eu.europeana.corelib.edm.utils.construct;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.solr.common.SolrInputDocument;
-
 import eu.europeana.corelib.definitions.edm.entity.WebResource;
 import eu.europeana.corelib.definitions.model.EdmLabel;
 import eu.europeana.corelib.edm.utils.SolrUtils;
+import org.apache.solr.common.SolrInputDocument;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -52,7 +51,7 @@ public class WebResourceSolrCreator {
 		SolrUtils.addFromStringArray(doc, EdmLabel.WR_OWL_SAMEAS,
 				wr.getOwlSameAs());
 		SolrUtils.addFromStringArray(doc,EdmLabel.WR_SVCS_HAS_SERVICE,wr.getSvcsHasService());
-		SolrUtils.addFromString(doc,EdmLabel.WR_WDRS_DESCRIBEDBY,wr.getWdrsDescribedBy());
+		SolrUtils.addFromStringArray(doc,EdmLabel.WR_DCTERMS_ISREFERENCEDBY,wr.getDctermsIsReferencedBy());
 		SolrUtils.addFromString(doc,EdmLabel.WR_EDM_PREVIEW,wr.getEdmPreview());
 	}
 

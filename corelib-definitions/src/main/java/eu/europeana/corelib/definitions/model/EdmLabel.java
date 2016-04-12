@@ -82,7 +82,7 @@ public enum EdmLabel {
 	WR_CC_DEPRECATED_ON("wr_cc_deprecated_on",SolrType.INDEXED),
     WR_SVCS_HAS_SERVICE("wr_svcs_hasservice",SolrType.NOT_STORED),
 	WR_EDM_PREVIEW("wr_edm_preview",SolrType.INDEXED),
-	WR_WDRS_DESCRIBEDBY("wr_wdrs_described_by",SolrType.INDEXED),
+	WR_DCTERMS_ISREFERENCEDBY("wr_dcterms_isReferencedBy",SolrType.INDEXED),
 
 
         LIC_RDF_ABOUT("cc_license", SolrType.INDEXED),

@@ -16,23 +16,6 @@
  */
 package eu.europeana.corelib.edm.utils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.logging.Logger;
-
-import eu.europeana.corelib.solr.entity.*;
-import org.apache.commons.lang.StringUtils;
-import org.jibx.runtime.BindingDirectory;
-import org.jibx.runtime.IBindingFactory;
-import org.jibx.runtime.IMarshallingContext;
-import org.jibx.runtime.JiBXException;
-
 import eu.europeana.corelib.definitions.edm.entity.EuropeanaAggregation;
 import eu.europeana.corelib.definitions.edm.entity.Place;
 import eu.europeana.corelib.definitions.edm.entity.Timespan;
@@ -42,10 +25,24 @@ import eu.europeana.corelib.definitions.jibx.ResourceOrLiteralType.Resource;
 import eu.europeana.corelib.definitions.model.ColorSpace;
 import eu.europeana.corelib.definitions.model.Orientation;
 import eu.europeana.corelib.solr.bean.impl.FullBeanImpl;
+import eu.europeana.corelib.solr.entity.*;
 import eu.europeana.corelib.utils.StringArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.jibx.runtime.BindingDirectory;
+import org.jibx.runtime.IBindingFactory;
+import org.jibx.runtime.IMarshallingContext;
+import org.jibx.runtime.JiBXException;
 
-import java.awt.MultipleGradientPaint;
+import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 /**
  * Convert a FullBean to EDM
@@ -111,12 +108,15 @@ public class EdmUtils {
                 Service service = new Service();
                 service.setAbout(serv.getAbout());
                 if(serv.getDctermsConformsTo()!=null) {
-                    ConformsTo conformsTo = new ConformsTo();
-                    Resource res = new Resource();
-                    res.setResource(serv.getDctermsConformsTo());
-                    conformsTo.setResource(res);
-                    conformsTo.setString("");
-                    service.setConformsTo(conformsTo);
+                    List<ConformsTo> conformsToList = new ArrayList<>();
+                    for(String conforms:serv.getDctermsConformsTo()) {
+                        ConformsTo conformsTo = new ConformsTo();
+                        Resource res = new Resource();
+                        res.setResource(conforms);
+                        conformsTo.setResource(res);
+                        conformsTo.setString("");
+                    }
+                    service.setConformsToList(conformsToList);
                 }
                 serviceList.add(service);
             }
@@ -661,7 +661,7 @@ public class EdmUtils {
             }
 
             addAsObject(wResource,Preview.class,wr.getEdmPreview());
-            addAsObject(wResource,Describedby.class,wr.getWdrsDescribedBy());
+            addAsList(wResource,IsReferencedBy.class,wr.getDctermsIsReferencedBy());
             webResources.add(wResource);
         }
 

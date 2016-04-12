@@ -16,15 +16,14 @@
  */
 package eu.europeana.corelib.edm.server.importer.util;
 
-import eu.europeana.corelib.definitions.jibx.*;
-import org.apache.solr.common.SolrInputDocument;
-
-import eu.europeana.corelib.storage.MongoServer;
 import eu.europeana.corelib.definitions.model.EdmLabel;
 import eu.europeana.corelib.edm.utils.MongoUtils;
 import eu.europeana.corelib.edm.utils.SolrUtils;
 import eu.europeana.corelib.mongo.server.EdmMongoServer;
 import eu.europeana.corelib.solr.entity.WebResourceImpl;
+import eu.europeana.corelib.storage.MongoServer;
+import eu.europeana.corelib.definitions.jibx.*;
+import org.apache.solr.common.SolrInputDocument;
 
 /**
  * Class Creating a MongoDB Web Resource
@@ -153,11 +152,12 @@ public final class WebResourcesFieldInput {
                         solrInputDocument,service,EdmLabel.WR_SVCS_HAS_SERVICE);
             }
         }
-
-        if(webResource.getDescribedby()!=null){
-            solrInputDocument.addField(EdmLabel.WR_WDRS_DESCRIBEDBY.toString(),
-                    webResource.getDescribedby().getResource());
-        }
+		if(webResource.getIsReferencedByList()!=null){
+			for(IsReferencedBy isReferencedBy : webResource.getIsReferencedByList()){
+				solrInputDocument = SolrUtils.addFieldFromResourceOrLiteral(
+						solrInputDocument,isReferencedBy,EdmLabel.WR_DCTERMS_ISREFERENCEDBY);
+			}
+		}
 		return solrInputDocument;
 	}
 
@@ -200,6 +200,9 @@ public final class WebResourcesFieldInput {
 		mongoWebResource.setDctermsCreated(MongoUtils
 				.createResourceOrLiteralMapFromList(webResource
 						.getCreatedList()));
+		mongoWebResource.setDctermsIsReferencedBy(SolrUtils
+				.resourceOrLiteralListToArray(webResource
+						.getIsReferencedByList()));
 		mongoWebResource
 				.setDctermsExtent(MongoUtils
 						.createResourceOrLiteralMapFromList(webResource
@@ -221,9 +224,6 @@ public final class WebResourcesFieldInput {
 		mongoWebResource.setOwlSameAs(SolrUtils.resourceListToArray(webResource
 				.getSameAList()));
 
-        if(webResource.getDescribedby()!=null){
-            mongoWebResource.setWdrsDescribedBy(SolrUtils.getResourceString(webResource.getDescribedby()));
-        }
         if(webResource.getPreview()!=null){
             mongoWebResource.setEdmPreview(SolrUtils.getResourceString(webResource.getPreview()));
         }

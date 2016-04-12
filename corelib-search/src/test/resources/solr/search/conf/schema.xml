@@ -329,7 +329,7 @@
 			indexed="true" stored="true" multiValued="true" />
 		<field name="wr_edm_preview" type="string"
                         indexed="true" stored="true" multiValued="true" />
-		<field name="wr_wdrs_described_by" type="string"
+		<field name="wr_dcterms_isReferencedBy" type="string"
                         indexed="true" stored="true" multiValued="true" />
                 <!--PROVIDER PROXY RELATED -->
 		<field name="proxy_ore_proxy" type="string" indexed="true"

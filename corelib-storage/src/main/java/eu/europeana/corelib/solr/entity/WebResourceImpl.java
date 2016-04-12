@@ -16,14 +16,15 @@
  */
 package eu.europeana.corelib.solr.entity;
 
-import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.annotations.Transient;
 import eu.europeana.corelib.definitions.edm.entity.Aggregation;
-import eu.europeana.corelib.definitions.edm.model.metainfo.ImageMetaInfo;
+import eu.europeana.corelib.definitions.edm.entity.WebResource;
 import eu.europeana.corelib.definitions.edm.model.metainfo.WebResourceMetaInfo;
+import eu.europeana.corelib.definitions.model.ColorSpace;
+import eu.europeana.corelib.definitions.model.Orientation;
 import eu.europeana.corelib.edm.model.metainfo.WebResourceMetaInfoImpl;
 import eu.europeana.corelib.solr.derived.AttributionSnippet;
 import org.bson.types.ObjectId;
@@ -31,16 +32,9 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Indexed;
-import com.google.code.morphia.annotations.Transient;
-
-import eu.europeana.corelib.definitions.edm.entity.WebResource;
-import eu.europeana.corelib.definitions.model.ColorSpace;
-import eu.europeana.corelib.definitions.model.Orientation;
-
-import javax.xml.bind.annotation.XmlElement;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @see eu.europeana.corelib.definitions.edm.entity.WebResource
@@ -75,8 +69,8 @@ public class WebResourceImpl implements WebResource {
     private String                    textAttributionSnippet;
     private String                    htmlAttributionSnippet;
     private String[]                  svcsHasService;
+    private String[]                  dctermsIsReferencedBy;
     private String                    edmPreview;
-    private String                    wdrsDescribedBy;
 
     @Transient
     @JsonIgnore
@@ -529,15 +523,14 @@ public class WebResourceImpl implements WebResource {
     }
 
     @Override
-    public String getWdrsDescribedBy() {
-        return wdrsDescribedBy;
+    public String[] getDctermsIsReferencedBy(){
+        return dctermsIsReferencedBy;
     }
 
     @Override
-    public void setWdrsDescribedBy(String wdrsDescribedBy) {
-        this.wdrsDescribedBy = wdrsDescribedBy;
+    public void setDctermsIsReferencedBy(String[] dctermsIsReferencedBy){
+        this.dctermsIsReferencedBy= dctermsIsReferencedBy;
     }
-
     public void setWebResourceMetaInfo(WebResourceMetaInfoImpl webResourceMetaInfo) {
         this.webResourceMetaInfo = webResourceMetaInfo;
     }
