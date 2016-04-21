@@ -84,7 +84,7 @@ public class EdmUtils {
         appendPlaces(rdf, fullBean.getPlaces());
         appendTimespans(rdf, fullBean.getTimespans());
         appendLicenses(rdf, fullBean.getLicenses());
-        appendServices(rdf,fullBean.getServices());
+        appendServices(rdf, fullBean.getServices());
         IMarshallingContext marshallingContext;
         try {
             if (bfact == null) {
@@ -102,22 +102,13 @@ public class EdmUtils {
     }
 
     private static void appendServices(RDF rdf, List<ServiceImpl> services) {
-        if(services!=null){
+        if (services != null) {
             List<Service> serviceList = new ArrayList<>();
-            for(ServiceImpl serv:services){
+            for (ServiceImpl serv : services) {
                 Service service = new Service();
                 service.setAbout(serv.getAbout());
-                if(serv.getDctermsConformsTo()!=null) {
-                    List<ConformsTo> conformsToList = new ArrayList<>();
-                    for(String conforms:serv.getDctermsConformsTo()) {
-                        ConformsTo conformsTo = new ConformsTo();
-                        Resource res = new Resource();
-                        res.setResource(conforms);
-                        conformsTo.setResource(res);
-                        conformsTo.setString("");
-                    }
-                    service.setConformsToList(conformsToList);
-                }
+                addAsList(service, ConformsTo.class, serv.getDctermsConformsTo());
+                addAsObject(service, Implements.class, serv.getDoapImplements());
                 serviceList.add(service);
             }
             rdf.setServiceList(serviceList);
@@ -506,7 +497,7 @@ public class EdmUtils {
             addAsObject(aggregation, _Object.class, aggr.getEdmObject());
             addAsObject(aggregation, Provider.class, aggr.getEdmProvider());
             addAsObject(aggregation, Rights1.class, aggr.getEdmRights());
-            addAsList(aggregation,IntermediateProvider.class,aggr.getEdmIntermediateProvider());
+            addAsList(aggregation, IntermediateProvider.class, aggr.getEdmIntermediateProvider());
 
             if (aggr.getEdmUgc() != null && !aggr.getEdmUgc().equalsIgnoreCase("false")) {
                 Ugc ugc = new Ugc();
@@ -649,9 +640,9 @@ public class EdmUtils {
                 }
                 wResource.setComponentColorList(componentColors);
             }
-            if(wr.getSvcsHasService()!=null){
+            if (wr.getSvcsHasService() != null) {
                 List<HasService> hsList = new ArrayList<>();
-                for(String hasService:wr.getSvcsHasService()){
+                for (String hasService : wr.getSvcsHasService()) {
                     HasService hs = new HasService();
                     hs.setResource(hasService);
                     hsList.add(hs);
@@ -660,8 +651,22 @@ public class EdmUtils {
                 wResource.setHasServiceList(hsList);
             }
 
-            addAsObject(wResource,Preview.class,wr.getEdmPreview());
-            addAsList(wResource,IsReferencedBy.class,wr.getDctermsIsReferencedBy());
+            addAsObject(wResource, Preview.class, wr.getEdmPreview());
+            //addAsList(wResource, IsReferencedBy.class, wr.getDctermsIsReferencedBy());
+            if (wr.getDctermsIsReferencedBy() != null) {
+                List<IsReferencedBy> hsList = new ArrayList<>();
+                for (String isRef : wr.getDctermsIsReferencedBy()) {
+                    IsReferencedBy hs = new IsReferencedBy();
+                    ResourceOrLiteralType.Resource res= new ResourceOrLiteralType.Resource();
+                    res.setResource(isRef);
+                    hs.setResource(res);
+                    hs.setString("");
+                    hs.setLang(null);
+                    hsList.add(hs);
+
+                }
+                wResource.setIsReferencedByList(hsList);
+            }
             webResources.add(wResource);
         }
 
@@ -974,7 +979,9 @@ public class EdmUtils {
             if (vals != null) {
                 for (String str : vals) {
                     T obj = clazz.newInstance();
-                    ((ResourceType) obj).setResource(str);
+                    if (obj.getClass().isAssignableFrom(ResourceType.class)) {
+                        ((ResourceType) obj).setResource(str);
+                    }
                     tList.add(obj);
                 }
                 return tList;

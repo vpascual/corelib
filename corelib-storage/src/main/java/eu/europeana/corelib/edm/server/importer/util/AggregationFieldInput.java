@@ -346,6 +346,9 @@ public final class AggregationFieldInput {
                 if(wResourceType.getHasServiceList()!=null){
                     webResource.setSvcsHasService(SolrUtils.resourceListToArray(wResourceType.getHasServiceList()));
                 }
+				if(wResourceType.getIsReferencedByList()!=null){
+					webResource.setDctermsIsReferencedBy(SolrUtils.resourceOrLiteralListToArray(wResourceType.getIsReferencedByList()));
+				}
                 if(wResourceType.getPreview()!=null){
                     webResource.setEdmPreview(wResourceType.getPreview().getResource());
                 }
