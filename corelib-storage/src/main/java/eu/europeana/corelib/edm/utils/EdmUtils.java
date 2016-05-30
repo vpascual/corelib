@@ -107,7 +107,27 @@ public class EdmUtils {
             for (ServiceImpl serv : services) {
                 Service service = new Service();
                 service.setAbout(serv.getAbout());
-                addAsList(service, ConformsTo.class, serv.getDctermsConformsTo());
+                //addAsList(service, ConformsTo.class, serv.getDctermsConformsTo());
+                if(serv.getDctermsConformsTo()!=null && serv.getDctermsConformsTo().length>0){
+                    List<ConformsTo> conformsToList = new ArrayList<>();
+
+                    for(String conformsTo:serv.getDctermsConformsTo()){
+                        if(StringUtils.isNotEmpty(conformsTo)) {
+                            ConformsTo cTo = new ConformsTo();
+                            ResourceOrLiteralType.Resource res = new Resource();
+                            res.setResource(conformsTo);
+                            cTo.setString("");
+                            cTo.setLang(null);
+                            cTo.setResource(res);
+                            conformsToList.add(cTo);
+                        }
+                    }
+                    if(conformsToList.size()>0){
+                        service.setConformsToList(conformsToList);
+                    }
+                }
+
+
                 addAsObject(service, Implements.class, serv.getDoapImplements());
                 serviceList.add(service);
             }

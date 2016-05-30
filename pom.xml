@@ -38,6 +38,16 @@
 		<module>corelib-search</module>
 	</modules>
 
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>ext-snapshots</id>
+			<url>http://artifactory.eanadev.org/artifactory/ext-snapshot-local</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
 	<repositories>
 		<repository>
 		     <id>europeana-ext-release-local</id>
