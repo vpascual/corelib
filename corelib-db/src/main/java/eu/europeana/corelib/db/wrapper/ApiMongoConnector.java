@@ -19,6 +19,7 @@ package eu.europeana.corelib.db.wrapper;
 import java.net.UnknownHostException;
 
 import com.mongodb.MongoClient;
+import eu.europeana.corelib.storage.impl.MongoProviderImpl;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.code.morphia.Morphia;
@@ -27,6 +28,8 @@ import com.mongodb.MongoException;
 import com.google.code.morphia.Datastore;
 import org.apache.log4j.Logger;
 
+import javax.annotation.Resource;
+
 /**
  * Api Mongo connector
  *
@@ -34,6 +37,9 @@ import org.apache.log4j.Logger;
 public class ApiMongoConnector {
 
 	private static Logger log = Logger.getLogger(ApiMongoConnector.class);
+
+	@Resource(name = "corelib_db_mongo_client")
+	public MongoClient mongoClient;
 
 	/**
 	 * Default constructor
@@ -58,21 +64,24 @@ public class ApiMongoConnector {
 		try {
 			log.info(String.format("Connecting to '%s' mongo server: %s:%d/%s",
 					label, host, port, dbName));
-			Mongo mongo = new MongoClient(host, port);
+//			Mongo mongo = mongoClient;
 			if (StringUtils.isNotEmpty(username)
 					&& StringUtils.isNotEmpty(password)) {
-				datastore = connection.createDatastore(mongo, dbName, username,
+				datastore = connection.createDatastore(mongoClient, dbName, username,
 						password.toCharArray());
 			} else {
-				datastore = connection.createDatastore(mongo, dbName);
+				datastore = connection.createDatastore(mongoClient, dbName);
 			}
 			log.info(String.format(
 					"Connection to '%s' mongo server was successful", label));
-		} catch (UnknownHostException | MongoException e) {
+		} catch (MongoException e) {
 			log.error(e.getMessage());
 		}
 		return datastore;
 	}
+
+
+
 	
 	public Datastore createDatastore(String label, Mongo mongo,
 			String dbName, String username, String password) {

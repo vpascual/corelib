@@ -87,5 +87,9 @@
         <constructor-arg value="#{europeanaProperties['mongodb.dbname']}" type="java.lang.String"/>
     </bean>
 
+    <bean id="corelib_db_mongo_client" class="com.mongodb.MongoClient" depends-on="corelib_db_mongoProvider">
+        <constructor-arg value="#{corelib_db_mongoProvider.getMongo().getAddress().getHost()}" type="java.lang.String"/>
+        <constructor-arg value="#{corelib_db_mongoProvider.getMongo().getAddress().getPort()}" type="int"/>
+    </bean>
     <bean id="corelib_db_mongo_apilog" class="eu.europeana.corelib.db.wrapper.ApiMongoConnector"/>
 </beans>
