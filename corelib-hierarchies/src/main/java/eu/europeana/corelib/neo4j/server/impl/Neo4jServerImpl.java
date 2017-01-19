@@ -23,7 +23,6 @@ import java.util.List;
 
 import eu.europeana.corelib.definitions.exception.ProblemType;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -31,8 +30,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.JsonNodeFactory;
@@ -116,14 +113,10 @@ public class Neo4jServerImpl implements Neo4jServer {
     public Node getNode(String rdfAbout) throws Neo4JException {
 		Node node = null;
 		try {
-			IndexHits<Node> nodes = index.get("rdf_about", rdfAbout);
-			long t1 = System.currentTimeMillis();
-			if (nodes.size() > 0 && hasRelationships(nodes)) {
-                LOG.info("neo4jserverimpl getNode hasRelationships ... took: " + (System.currentTimeMillis() - t1) + " milliseconds");
-                t1 = System.currentTimeMillis();
+        IndexHits<Node> nodes = index.get("rdf_about", rdfAbout);
+		if (nodes.size() > 0 && hasRelationships(nodes)) {
                 node = nodes.getSingle();
-                LOG.info("neo4jserverimpl nodes.getSingle() ... took: " + (System.currentTimeMillis() - t1) + " milliseconds");
-            }
+		}
 		} catch (Exception e) {
 			throw new Neo4JException(e, ProblemType.NEO4J_CANNOTGETNODE);
 		}
@@ -347,29 +340,27 @@ public class Neo4jServerImpl implements Neo4jServer {
 		return 0;
 	}
 
+	// NOTE that for nodes with inconsistent data structures an error is thrown by the startup plugin
+	// However, because the same condition is in practice always checked by the API BEFORE this method
+	// can be called (apart from one unittest), handling it is not necessary at this time
 	@Override
 	public Hierarchy getInitialStruct(String rdfAbout) throws Neo4JException {
 		if (!isHierarchy(rdfAbout)) {
 			return null;
 		}
-		HttpGet method = new HttpGet(customPath + "/initial/startup/nodeId/" + StringUtils.replace(rdfAbout, "/", "%2F"));
+		HttpGet method = new HttpGet(customPath + "/initial/startup/nodeId/"
+                + StringUtils.replace(rdfAbout, "/", "%2F"));
 		LOG.info("path: " + method.getURI());
 		try {
-			HttpResponse resp   = client.execute(method);
+			HttpResponse resp = client.execute(method);
 			ObjectMapper mapper = new ObjectMapper();
-			if (EntityUtils.toString(resp.getEntity()).equalsIgnoreCase("INCONSISTENT_DATA")) {
-				throw new Neo4JException(ProblemType.NEO4J_INCONSISTENT_DATA);
-			} else {
-				Hierarchy obj = mapper.readValue(resp.getEntity().getContent(), Hierarchy.class);
-				return obj;
-			}
+			return mapper.readValue(resp.getEntity().getContent(), Hierarchy.class);
 		} catch (IOException e) {
 			LOG.error(e.getMessage());
 		} finally {
 			method.releaseConnection();
 		}
 		return null;
-
 	}
 
 		@Override

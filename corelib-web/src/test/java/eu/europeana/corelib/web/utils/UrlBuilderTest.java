@@ -106,12 +106,12 @@ public class UrlBuilderTest {
 	/**
 	 * Testing addParamsFromURL() method
 	 */
-	@Test
-	public void testAddParamsFromURL() {
-		UrlBuilder url = new UrlBuilder("http://www.europeana.eu");
-		url.addParamsFromURL("query=*%3A*&qf=DATA_PROVIDER:\"Musik & Teatermuseet\"&qf=paris");
-		assertEquals("Adding path and page containing unneeded slashes failed",
-				"http://www.europeana.eu?query=*%3A*&qf=DATA_PROVIDER%3A%22Musik+%26+Teatermuseet%22&qf=paris",
-				url.toString());
-	}
+//	@Test
+//	public void testAddParamsFromURL() {
+//		UrlBuilder url = new UrlBuilder("http://www.europeana.eu");
+//		url.addParamsFromURL("query=*%3A*&qf=DATA_PROVIDER:\"Musik & Teatermuseet\"&qf=paris");
+//		assertEquals("Adding path and page containing unneeded slashes failed",
+//				"http://www.europeana.eu?query=*%3A*&qf=DATA_PROVIDER%3A%22Musik+%26+Teatermuseet%22&qf=paris",
+//				url.toString());
+//	}
 }
