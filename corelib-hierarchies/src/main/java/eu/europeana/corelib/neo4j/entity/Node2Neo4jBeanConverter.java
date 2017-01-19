@@ -41,7 +41,7 @@ public class Node2Neo4jBeanConverter {
      * Convert a neo4j node to a Neo4jBean
      *
      * @param node The node to convert
-     * @param index The index of the node
+     * @param index The index of the node (relative position among its siblings)
      * @return The Neo4jBean representing the node
      */
     public static Neo4jBean toNeo4jBean(Node node, long index) {

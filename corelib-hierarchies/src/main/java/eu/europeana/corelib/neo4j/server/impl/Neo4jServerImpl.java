@@ -23,12 +23,16 @@ import java.util.List;
 
 import eu.europeana.corelib.definitions.exception.ProblemType;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.JsonNodeFactory;
@@ -297,17 +301,19 @@ public class Neo4jServerImpl implements Neo4jServer {
 		return children;
 	}
 
+	// NOTE that this method is also available in the Neo4J plugins, where it is called in the hierarchy() method
+	// @ the startup/nodeId endpoint to retrieve the initial struct
 	@Override
     public long getChildrenCount(Node node) {
 
-		// start n = node(id) match (n)-[:HAS_PART]->(part) RETURN COUNT(part)
-		// as children
 		ObjectNode obj = JsonNodeFactory.instance.objectNode();
 		ArrayNode statements = JsonNodeFactory.instance.arrayNode();
 		obj.put("statements", statements);
 		ObjectNode statement = JsonNodeFactory.instance.objectNode();
 		statement.put("statement",
-						"start n = node:edmsearch2(rdf_about={from}) match (n)-[:`dcterms:hasPart`]->(part) RETURN COUNT(part) as children");
+						"start n = node:edmsearch2(rdf_about={from}) " +
+								"match (n)-[:`dcterms:hasPart`]->(part) WHERE NOT ID(n)=ID(part) " +
+								"RETURN COUNT(part) as children");
 		ObjectNode parameters = statement.with("parameters");
 		statements.add(statement);
         parameters.put("from", (String) node.getProperty("rdf:about"));
@@ -342,29 +348,31 @@ public class Neo4jServerImpl implements Neo4jServer {
 	}
 
 	@Override
-    public Hierarchy getInitialStruct(String rdfAbout) throws Neo4JException {
-        if (!isHierarchy(rdfAbout)) {
+	public Hierarchy getInitialStruct(String rdfAbout) throws Neo4JException {
+		if (!isHierarchy(rdfAbout)) {
 			return null;
 		}
-		HttpGet method = new HttpGet(customPath + "/initial/startup/nodeId/"
-                + StringUtils.replace(rdfAbout, "/", "%2F"));
+		HttpGet method = new HttpGet(customPath + "/initial/startup/nodeId/" + StringUtils.replace(rdfAbout, "/", "%2F"));
 		LOG.info("path: " + method.getURI());
 		try {
-			HttpResponse resp = client.execute(method);
-
+			HttpResponse resp   = client.execute(method);
 			ObjectMapper mapper = new ObjectMapper();
-			Hierarchy obj = mapper.readValue(resp.getEntity().getContent(),
-					Hierarchy.class);
-			return obj;
+			if (EntityUtils.toString(resp.getEntity()).equalsIgnoreCase("INCONSISTENT_DATA")) {
+				throw new Neo4JException(ProblemType.NEO4J_INCONSISTENT_DATA);
+			} else {
+				Hierarchy obj = mapper.readValue(resp.getEntity().getContent(), Hierarchy.class);
+				return obj;
+			}
 		} catch (IOException e) {
 			LOG.error(e.getMessage());
 		} finally {
 			method.releaseConnection();
 		}
 		return null;
+
 	}
 
-	@Override
+		@Override
 	public String getCustomPath() {
 		return customPath;
 	}
