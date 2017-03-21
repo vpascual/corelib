@@ -77,9 +77,9 @@
 				<appinfo>
 					<sch:pattern>
 						<sch:rule context="edm:ProvidedCHO">
-							<sch:assert	test="dc:subject or dc:type or dc:coverage or dct:temporal or dct:spatial">
+							<sch:assert	test="dc:subject or dc:type or dct:temporal or dct:spatial">
 								id: <sch:value-of select="@rdf:about" />
-								- A ProvidedCHO must have a dc:subject or dc:type or dc:coverage or dct:temporal or dct:spatial.
+								- A ProvidedCHO must have a dc:subject or dc:type or dct:temporal or dct:spatial.
 							</sch:assert>
 							<sch:assert test="dc:title or dc:description">
 								id: <sch:value-of select="@rdf:about" /> - A ProvidedCHO must have a dc:title or dc:description.
