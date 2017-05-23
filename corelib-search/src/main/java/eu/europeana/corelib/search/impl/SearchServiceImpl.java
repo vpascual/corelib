@@ -326,6 +326,7 @@ public class SearchServiceImpl implements SearchService {
         if (fullBean != null) {
             injectWebMetaInfo(fullBean);
 
+            /*
             boolean isHierarchy = false;
             try {
                 isHierarchy = isHierarchy(fullBean.getAbout());
@@ -337,7 +338,7 @@ public class SearchServiceImpl implements SearchService {
                 for (Proxy prx : fullBean.getProxies()) {
                     prx.setDctermsHasPart(null);
                 }
-            }
+            } */
 
             if (similarItems) {
                 try {
