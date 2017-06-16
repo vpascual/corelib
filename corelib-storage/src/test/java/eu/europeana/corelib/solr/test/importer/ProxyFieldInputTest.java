@@ -1,22 +1,66 @@
 package eu.europeana.corelib.solr.test.importer;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.query.Query;
-import eu.europeana.corelib.definitions.jibx.*;
+import eu.europeana.corelib.definitions.jibx.Alternative;
+import eu.europeana.corelib.definitions.jibx.ConformsTo;
+import eu.europeana.corelib.definitions.jibx.Contributor;
+import eu.europeana.corelib.definitions.jibx.Coverage;
+import eu.europeana.corelib.definitions.jibx.Created;
+import eu.europeana.corelib.definitions.jibx.Creator;
+import eu.europeana.corelib.definitions.jibx.CurrentLocation;
+import eu.europeana.corelib.definitions.jibx.Date;
+import eu.europeana.corelib.definitions.jibx.Description;
+import eu.europeana.corelib.definitions.jibx.EdmType;
+import eu.europeana.corelib.definitions.jibx.EuropeanaProxy;
+import eu.europeana.corelib.definitions.jibx.EuropeanaType;
+import eu.europeana.corelib.definitions.jibx.Extent;
+import eu.europeana.corelib.definitions.jibx.Format;
+import eu.europeana.corelib.definitions.jibx.HasFormat;
+import eu.europeana.corelib.definitions.jibx.HasPart;
+import eu.europeana.corelib.definitions.jibx.HasVersion;
+import eu.europeana.corelib.definitions.jibx.Identifier;
+import eu.europeana.corelib.definitions.jibx.IsFormatOf;
+import eu.europeana.corelib.definitions.jibx.IsNextInSequence;
+import eu.europeana.corelib.definitions.jibx.IsPartOf;
+import eu.europeana.corelib.definitions.jibx.IsReferencedBy;
+import eu.europeana.corelib.definitions.jibx.IsReplacedBy;
+import eu.europeana.corelib.definitions.jibx.IsRequiredBy;
+import eu.europeana.corelib.definitions.jibx.IsVersionOf;
+import eu.europeana.corelib.definitions.jibx.Issued;
+import eu.europeana.corelib.definitions.jibx.Language;
+import eu.europeana.corelib.definitions.jibx.Medium;
+import eu.europeana.corelib.definitions.jibx.Provenance;
+import eu.europeana.corelib.definitions.jibx.ProxyFor;
+import eu.europeana.corelib.definitions.jibx.ProxyIn;
+import eu.europeana.corelib.definitions.jibx.ProxyType;
+import eu.europeana.corelib.definitions.jibx.Publisher;
+import eu.europeana.corelib.definitions.jibx.References;
+import eu.europeana.corelib.definitions.jibx.Relation;
+import eu.europeana.corelib.definitions.jibx.Replaces;
+import eu.europeana.corelib.definitions.jibx.Requires;
+import eu.europeana.corelib.definitions.jibx.Rights;
+import eu.europeana.corelib.definitions.jibx.Source;
+import eu.europeana.corelib.definitions.jibx.Spatial;
+import eu.europeana.corelib.definitions.jibx.Subject;
+import eu.europeana.corelib.definitions.jibx.TableOfContents;
+import eu.europeana.corelib.definitions.jibx.Temporal;
+import eu.europeana.corelib.definitions.jibx.Title;
+import eu.europeana.corelib.definitions.jibx.Type;
+import eu.europeana.corelib.definitions.jibx.Type2;
 import eu.europeana.corelib.definitions.model.EdmLabel;
 import eu.europeana.corelib.edm.server.importer.util.ProxyFieldInput;
 import eu.europeana.corelib.mongo.server.EdmMongoServer;
 import eu.europeana.corelib.solr.entity.ProxyImpl;
-import org.apache.solr.common.SolrInputDocument;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import org.apache.solr.common.SolrInputDocument;
+import org.junit.Test;
 
 public class ProxyFieldInputTest {
 
@@ -377,7 +421,7 @@ public class ProxyFieldInputTest {
         ProxyType proxy = new ProxyType();
         proxy.setAbout("test about");
         CurrentLocation currentLocation = new CurrentLocation();
-        currentLocation.setResource("test current location");
+        currentLocation.setString("test current location");
         IsNextInSequence isNextInSequence = new IsNextInSequence();
         isNextInSequence.setResource("test is next in sequence");
         List<IsNextInSequence> isNextInSequenceList = new ArrayList<>();
