@@ -17,6 +17,7 @@
 
 package eu.europeana.corelib.lookup.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.code.morphia.Datastore;
@@ -122,6 +123,20 @@ public class CollectionMongoServerImpl implements MongoServer, CollectionMongoSe
 				.equal(newCollectionId).get() != null ? datastore
 				.find(Collection.class).field("newCollectionId")
 				.equal(newCollectionId).get().getOldCollectionId() : null;
+	}
+
+	@Override
+	public List<String> findAllOldCollectionIds(String newCollectionId) {
+		List<Collection> collections = datastore.find(Collection.class).field("newCollectionId")
+				.equal(newCollectionId).get() != null ? datastore
+				.find(Collection.class).field("newCollectionId")
+				.equal(newCollectionId).asList() : null;
+
+		List<String> oldCollectionIds = new ArrayList<>();
+		for (Collection collection : collections) {
+			oldCollectionIds.add(collection.getOldCollectionId());
+		}
+		return oldCollectionIds;
 	}
 
 	/* (non-Javadoc)

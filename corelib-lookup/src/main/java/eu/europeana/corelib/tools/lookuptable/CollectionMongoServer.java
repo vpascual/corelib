@@ -26,7 +26,9 @@ public interface CollectionMongoServer {
 	 */
 	String findOldCollectionId(String newCollectionId);
 
-	/**
+  List<String> findAllOldCollectionIds(String newCollectionId);
+
+  /**
 	 * Save a Collection
 	 * 
 	 * @param collection
